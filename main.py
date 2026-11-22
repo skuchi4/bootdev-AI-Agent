@@ -10,6 +10,7 @@ if api_key is None:
 
 parser = argparse.ArgumentParser(description="accepts coding task, chooses from set of predefined functions")
 parser.add_argument("user_prompt", type=str, help="ask the bot something")
+parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 args = parser.parse_args()
 # Now we can access `args.user_prompt`
 
@@ -30,8 +31,9 @@ def main():
     if response.usage is None:
         raise RuntimeError("failed API request")
     else:
-        print(
-            f"Prompt tokens: {response.usage.prompt_tokens}\nResponse tokens: {response.usage.completion_tokens}"
+        if args.verbose:
+            print(
+                f"User prompt: {args.user_prompt}\nPrompt tokens: {response.usage.prompt_tokens}\nResponse tokens: {response.usage.completion_tokens}"
         )
     print(response.choices[0].message.content)
 
