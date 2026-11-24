@@ -6,8 +6,9 @@ tests = [("calculator", "lorem.txt"), ("calculator", "main.py"), ("calculator","
 
 def test_get_file_contents(*args):
     for test in tests:
+        working_directory = test[0]
         target_file = test[1]
-        result = get_file_content("calculator", target_file)
+        result = get_file_content(working_directory, target_file)
         if result.startswith("Error:"):
             print(result)
         else:
