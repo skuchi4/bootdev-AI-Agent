@@ -27,30 +27,38 @@ def main():
         {"role": "user", "content": args.user_prompt},
     ]
 
+    counter = 0
+    for _ in range(20):
+        counter += 1
 
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        messages=messages,
-        tools=available_functions,
-    )
-    if response.usage is None:
-        raise RuntimeError("failed API request")
-    else:
-        if args.verbose:
-            print(
-                f"User prompt: {args.user_prompt}\nPrompt tokens: {response.usage.prompt_tokens}\nResponse tokens: {response.usage.completion_tokens}"
+        response = client.chat.completions.create(
+            model="openrouter/free",
+            messages=messages,
+            tools=available_functions,
         )
-    message = response.choices[0].message
-    if message.tool_calls is None:
-        print(response.choices[0].message.content)
-    else:
-        for tool_call in message.tool_calls:
-            function_args = json.loads(tool_call.function.arguments or "{}")
-            result_message = call_function(tool_call, args.verbose)
-            if result_message["content"] == {}:
-                raise Exception("no content")
+        if response.usage is None:
+            raise RuntimeError("failed API request")
+        else:
             if args.verbose:
-                print(f"-> {result_message['content']}")
+                print(
+                    f"User prompt: {args.user_prompt}\nPrompt tokens: {response.usage.prompt_tokens}\nResponse tokens: {response.usage.completion_tokens}"
+            )
+        message = response.choices[0].message
+        messages.append(message)
+        if message.tool_calls is None:
+            return print(response.choices[0].message.content)
+        else:
+            for tool_call in message.tool_calls:
+                function_args = json.loads(tool_call.function.arguments or "{}")
+                result_message = call_function(tool_call, args.verbose)
+                messages.append(result_message)
+                if result_message["content"] == {}:
+                    raise Exception("no content")
+                if args.verbose:
+                    print(f"-> {result_message['content']}")
+
+        if counter == 20:
+            raise SystemExit("maximum number of iterations reached without returning")
 
 
 
