@@ -17,6 +17,7 @@ schema_write_file = {
                     "description": "The string that will be written at the specified file path",
                 }
             },
+            "required": ["file_path", "content"],
         },
     },
 }

@@ -4,7 +4,7 @@ schema_run_python_file = {
     "type": "function",
     "function": {
         "name": "run_python_file",
-        "description": "Runs the python file at a specified file path, with optional arguments to feed into the function at that path",
+        "description": "Run the python file at a specified file path",
         "parameters": {
             "type": "object",
             "properties": {
@@ -13,10 +13,14 @@ schema_run_python_file = {
                     "description": "File path to the python file that should be executed, relative to the working directory (default is the working directory itself)",
                 },
                 "args": {
-                    "type": "Optional: A list of string(s) or None. The default value is None.",
-                    "description": "If a list of string(s) is provided, it contains the argument(s) that will be used in the specified function",
-                }
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                    },
+                    "description": "Optional argument: The default value is None. If a list of string(s) is provided, it contains the argument(s) that will be used in the specified function at the file path.",
+                },
             },
+            "required": ["file_path"],
         },
     },
 }

@@ -14,6 +14,7 @@ schema_get_file_content = {
                     "description": "File path to return the string from, relative to the working directory (default is the working directory itself)",
                 },
             },
+            "required": ["file_path"],
         },
     },
 }
